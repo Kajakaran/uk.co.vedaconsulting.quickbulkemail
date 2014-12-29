@@ -109,6 +109,10 @@ class CRM_Quickbulkemail_Page_QuickBulkEmail extends CRM_Core_Page {
         $scheduled_name = 'NULL';
       }
       
+      if(empty($mailing['scheduled_date'])) {
+        $mailing['scheduled_date'] = NULL;
+      }
+      
       $action = "<span><a href='".$actionUrl."'>".$actionName."</a></span>" ;
       $rows[] = array( 'id'           => $mailing['id']
                       ,'name'         => $mailing['name']

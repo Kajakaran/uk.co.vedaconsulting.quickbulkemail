@@ -53,7 +53,7 @@ class CRM_Quickbulkemail_Form_QuickBulkEmail extends CRM_Core_Form {
       $defaults['campaign_id'] = $mailing->campaign_id;
       $defaults['dedupe_email'] = $mailing->dedupe_email;
 
-      $dao = new CRM_Mailing_DAO_Group();
+      $dao = new CRM_Mailing_DAO_MailingGroup();
 
       $mailingGroups = array(
         'civicrm_group' => array( ),
@@ -71,12 +71,12 @@ class CRM_Quickbulkemail_Form_QuickBulkEmail extends CRM_Core_Form {
         $mailingGroups[$entityTable][$dao->group_type][] = $dao->entity_id;
       }
 
-      $defaults['includeGroups'] = $mailingGroups['civicrm_group']['Include'];
-      $defaults['excludeGroups'] = CRM_Utils_Array::value('Exclude', $mailingGroups['civicrm_group']);
+      $defaults['includeGroups'] = $mailingGroups['civicrm_group']['include'];
+      $defaults['excludeGroups'] = CRM_Utils_Array::value('exclude', $mailingGroups['civicrm_group']);
 
       if (!empty($mailingGroups['civicrm_mailing'])) {
-        $defaults['includeMailings'] = CRM_Utils_Array::value('Include', $mailingGroups['civicrm_mailing']);
-        $defaults['excludeMailings'] = CRM_Utils_Array::value('Exclude', $mailingGroups['civicrm_mailing']);
+        $defaults['includeMailings'] = CRM_Utils_Array::value('include', $mailingGroups['civicrm_mailing']);
+        $defaults['excludeMailings'] = CRM_Utils_Array::value('exclude', $mailingGroups['civicrm_mailing']);
       }
     } else {
       $defaults['url_tracking'] = TRUE;
@@ -110,7 +110,7 @@ class CRM_Quickbulkemail_Form_QuickBulkEmail extends CRM_Core_Form {
       $this->assign('templateSelected', $templateId ? $templateId : 0);
       if (isset($defaults['msg_template_id']) && !$templateId) {
         $defaults['template'] = $defaults['msg_template_id'];
-        $messageTemplate = new CRM_Core_DAO_MessageTemplates();
+        $messageTemplate = new CRM_Core_DAO_MessageTemplate();
         $messageTemplate->id = $defaults['msg_template_id'];
         $messageTemplate->selectAdd();
         $messageTemplate->selectAdd('msg_text, msg_html');
@@ -131,7 +131,7 @@ class CRM_Quickbulkemail_Form_QuickBulkEmail extends CRM_Core_Form {
         $this->set('htmlFile', $defaults['body_html']);
         $this->set('skipHtmlFile', TRUE);
       }
-
+      
       //set default from email address.
       if (CRM_Utils_Array::value('from_name', $defaults) && CRM_Utils_Array::value('from_email', $defaults)) {
         $defaults['from_email_address'] = array_search('"' . $defaults['from_name'] . '" <' . $defaults['from_email'] . '>',
@@ -833,7 +833,7 @@ class CRM_Quickbulkemail_Form_QuickBulkEmail extends CRM_Core_Form {
 	
     //handle mailing from name & address.
     $fromEmailAddress = CRM_Utils_Array::value($formValues['from_email_address'],
-      CRM_Core_PseudoConstant::fromEmailAddress('from_email_address')
+      CRM_Core_OptionGroup::values('from_email_address')
     );
 
     //get the from email address
@@ -844,7 +844,7 @@ class CRM_Quickbulkemail_Form_QuickBulkEmail extends CRM_Core_Form {
 
     //Add Reply-To to headers
     if (CRM_Utils_Array::value('reply_to_address', $formValues)) {
-      $replyToEmail = CRM_Core_PseudoConstant::fromEmailAddress('from_email_address');
+      $replyToEmail = CRM_Core_OptionGroup::values('from_email_address');
       $params['replyto_email'] = CRM_Utils_Array::value($formValues['reply_to_address'], $replyToEmail);
     }
     
