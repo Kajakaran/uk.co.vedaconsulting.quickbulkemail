@@ -256,6 +256,7 @@
   cj('.crm-html_email-accordion').attr('style', 'display:none;');
   cj('#template').change(function(){
     cj(document).ajaxSuccess(function(){
+      cj('#cke_html_message').attr("style", "width: 100%;");
       cj('#cke_html_message').find('iframe').attr("id", "myframe");
       cj('iframe').parent().parent().parent().parent().parent().parent().css('display', 'block');
 
