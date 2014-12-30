@@ -274,7 +274,7 @@ class CRM_Quickbulkemail_Form_QuickBulkEmailSchedule extends CRM_Core_Form {
         return $error;
       }
 
-      $job             = new CRM_Mailing_BAO_Job();
+      $job             = new CRM_Mailing_BAO_MailingJob();
       $job->mailing_id = $self->_mailingID;
       $job->is_test    = TRUE;
       $job->save();
@@ -340,7 +340,7 @@ ORDER BY   e.is_bulkmail DESC, e.is_primary DESC
       $testParams['job_id'] = $job->id;
       $isComplete = FALSE;
       while (!$isComplete) {
-        $isComplete = CRM_Mailing_BAO_Job::runJobs($testParams);
+        $isComplete = CRM_Mailing_BAO_MailingJob::runJobs($testParams);
       }
 
       if (CRM_Utils_Array::value('sendtest', $testParams)) {
@@ -390,7 +390,7 @@ ORDER BY   e.is_bulkmail DESC, e.is_primary DESC
     $mailing = new CRM_Mailing_BAO_Mailing();
     $mailing->id = $ids['mailing_id'];
     if ($mailing->find(TRUE)) {
-      $job             = new CRM_Mailing_BAO_Job();
+      $job             = new CRM_Mailing_BAO_MailingJob();
       $job->mailing_id = $mailing->id;
       $job->is_test    = 0;
       if ($job->find(TRUE)) {
